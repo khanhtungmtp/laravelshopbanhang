@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
+use App\Models\Categories;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -15,6 +15,8 @@ class CategoryController extends Controller
     public function index()
     {
         //
+        $category = Categories::paginate(5);
+        return view('admin.pages.category.list', compact('category'));
     }
 
     /**
@@ -44,7 +46,7 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show(Categories $category)
     {
         //
     }
@@ -55,7 +57,7 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit(Categories $category)
     {
         //
     }
@@ -67,7 +69,7 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Categories $category)
     {
         //
     }
@@ -78,7 +80,7 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Categories $category)
     {
         //
     }

@@ -18,6 +18,6 @@ class Product extends Model
 
     public function Category()
     {
-        return $this->belongsTo('App\Models\Category', 'idCategory', 'id');
+        return $this->belongsTo('App\Models\Categories', 'idCategory', 'id');
     }
 }
