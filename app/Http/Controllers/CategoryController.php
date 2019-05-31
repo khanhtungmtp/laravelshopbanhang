@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categories;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCategoryRequest;
+use Validator;
 
 class CategoryController extends Controller
 {
@@ -34,15 +35,15 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreCategoryRequest $request)
     {
         //
         Categories::create([
-            'name' => $request->name,
-            'slug' => str_slug($request->name),
+            'name'   => $request->name,
+            'slug'   => str_slug($request->name),
             'status' => $request->status,
         ]);
         return redirect(route('category.index'));
@@ -51,10 +52,10 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Category  $category
+     * @param App\Models\Categories $category
      * @return \Illuminate\Http\Response
      */
-    public function show(Categories $category)
+    public function show($id)
     {
         //
     }
@@ -62,34 +63,59 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Category  $category
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Categories $category)
+    public function edit($id)
     {
         //
+        $category = Categories::find($id);
+        return response()->json($category, 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Category  $category
+     * @param \Illuminate\Http\Request $request
+     * @param                          $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Categories $category)
+    public function update(Request $request, $id)
     {
-        //
+        // validate
+        $validator = Validator::make($request->all(),
+            [
+                'name' => 'required|min:2|max:255'
+            ],
+            [
+                'required' => 'Tên danh mục không được bỏ trống',
+                'min'      => 'Tên danh mục phải từ 2-255 ký tự',
+                'max'      => 'Tên danh mục phải từ 2-255 ký tự'
+            ]);
+        if ($validator->fails())
+        {
+            return response()->json(['error' => 'true', 'message' => $validator->errors()], 200);
+        }
+        $category = Categories::find($id);
+        // update
+        $category->update([
+            'name'   => $request->name,
+            'slug'   => str_slug($request->name),
+            'status' => $request->status,
+        ]);
+        return response()->json(['success' => 'Cập nhập danh mục thành công']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Category  $category
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Categories $category)
+    public function destroy($id)
     {
-        //
+        $category = Categories::find($id);
+        $category->delete();
+        return response()->json(['success' => 'Xóa danh mục thành công' ]);
     }
 }

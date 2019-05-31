@@ -9,6 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <base href="{{ asset('') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
 
     <!-- Custom fonts for this template-->
@@ -18,6 +19,7 @@
 
     <!-- Custom styles for this template-->
     <link href="assets/admin/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="assets/admin/css/toastr.css" rel="stylesheet">
 
 </head>
 
