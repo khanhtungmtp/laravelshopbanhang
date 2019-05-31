@@ -15,6 +15,7 @@
                         <th>STT</th>
                         <th>Name</th>
                         <th>Slug</th>
+                        <th>Trạng thái</th>
                         <th>Hành động</th>
                     </tr>
                     </thead>
@@ -23,13 +24,14 @@
                         <th>STT</th>
                         <th>Name</th>
                         <th>Slug</th>
+                        <th>Trạng thái</th>
                         <th>Hành động</th>
                     </tr>
                     </tfoot>
                     <tbody>
                     @foreach ($category as $key => $cat)
                         <tr>
-                            <td>Tiger Nixon</td>
+                            <td>{{ $key }}</td>
                             <td>{{ $cat->name }}</td>
                             <td>{{ $cat->slug }}</td>
                             <td>
@@ -41,12 +43,13 @@
                             </td>
                             <td>
                                 <button class="btn btn-warning edit" title="{{ "Sửa ". $cat->name }}"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-danger delete" title="{{ "Xóa ". $cat->name }}"><i class="fas fa trash alt"></i></button>
+                                <button class="btn btn-danger delete" title="{{ "Xóa ". $cat->name }}"><i class="fas fa-trash-alt"></i></button>
                             </td>
                         </tr>
                     @endforeach
                     </tbody>
                 </table>
+                <div class="pull-right">{{ $category->links() }}</div>
             </div>
         </div>
     </div>
