@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     //
-    protected $table = 'product';
+    protected $table = 'products';
 
-    protected $fillable = ['name', 'slug', 'description', 'quantity', 'price', 'promotional', 'idCategory', 'idProductType', 'status'];
+    protected $fillable = ['name', 'slug', 'image', 'description', 'quantity', 'price', 'promotional', 'idCategory', 'idProductType', 'status'];
 
     public function productType()
     {
-        return $this->belongsTo('App\Models\ProductType', 'idProductType', 'id');
+        return $this->belongsTo('App\Models\ProductTypes', 'idProductType', 'id');
     }
 
     public function Category()

@@ -18,6 +18,7 @@
             <span>Dashboard</span></a>
     </li>
 
+    {{-- Category--}}
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -42,6 +43,55 @@
         </div>
     </li>
 
+    {{-- Product_type   --}}
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Danh mục loại sản phẩm
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
+           aria-expanded="true" aria-controls="collapseThree">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Product type</span>
+        </a>
+        <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Danh mục loại sản phẩm</h6>
+                <a class="collapse-item" href="{{ route('product-type.index') }}">Danh sách</a>
+                <a class="collapse-item" href="{{ route('product-type.create') }}">Thêm mới</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Product -->
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Sản phẩm
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFour"
+           aria-expanded="true" aria-controls="collapseFour">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Product</span>
+        </a>
+        <div id="collapseFour" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Sản phẩm</h6>
+                <a class="collapse-item" href="{{ route('product.index') }}">Danh sách</a>
+                <a class="collapse-item" href="{{ route('product.create') }}">Thêm mới</a>
+            </div>
+        </div>
+    </li>
 
 
 </ul>

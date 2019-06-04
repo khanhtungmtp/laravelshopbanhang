@@ -49,3 +49,19 @@
 <script src="assets/admin/js/sb-admin-2.min.js"></script>
 <script src="assets/admin/js/ajax.js"></script>
 <script src="assets/admin/js/toastr.min.js"></script>
+<script src="ckeditor/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('description')
+</script>
+
+@if(session('message'))
+    <script type="text/javascript">
+        toastr.success('{{ session('message') }}', 'Thông báo', {timeOut: 5000});
+    </script>
+@endif
+
+@if(session('error'))
+    <script type="text/javascript">
+        toastr.error('{{ session('error') }}', 'Thông báo', {timeOut: 5000});
+    </script>
+@endif

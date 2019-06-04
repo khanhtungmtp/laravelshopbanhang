@@ -14,6 +14,9 @@
                     <fieldset class="form-group">
                         <label>Name</label>
                         <input class="form-control" name="name" placeholder="Nhập tên category">
+                        @if ($errors->has('name'))
+                            <div class="alert alert-danger">{{ $errors->first('name') }}</div>
+                        @endif
                     </fieldset>
                     <div class="form-group">
                         <label>Status</label>
@@ -22,8 +25,7 @@
                             <option value="0">Không Hiển Thị</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-success">Submit Button</button>
-                    <button type="reset" class="btn btn-primary">Reset Button</button>
+                    <button type="submit" class="btn btn-success">Thêm</button>
                 </form>
             </div>
         </div>

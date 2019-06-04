@@ -13,8 +13,8 @@
                     <thead>
                     <tr>
                         <th>STT</th>
-                        <th>Name</th>
-                        <th>Slug</th>
+                        <th>Tên</th>
+                        <th>Tên không dấu</th>
                         <th>Trạng thái</th>
                         <th>Hành động</th>
                     </tr>
@@ -22,8 +22,8 @@
                     <tfoot>
                     <tr>
                         <th>STT</th>
-                        <th>Name</th>
-                        <th>Slug</th>
+                        <th>Tên</th>
+                        <th>Tên không dấu</th>
                         <th>Trạng thái</th>
                         <th>Hành động</th>
                     </tr>
@@ -36,9 +36,9 @@
                             <td>{{ $cat->slug }}</td>
                             <td>
                                 @if($cat->status == '1')
-                                    Hiển thị
+                                    {!! "Hiển thị" !!}
                                 @else
-                                    Không hiển thị
+                                    {!! "Không hiển thị" !!}
                                 @endif
                             </td>
                             <td>
@@ -66,7 +66,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa category <span id="title"></span></h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Chỉnh sửa danh mục sản phẩm<span id="title"></span></h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -79,6 +79,9 @@
                                     <label>Name</label>
                                     <input class="form-control name" name="name" placeholder="Nhập tên category">
                                     <span class="error" style="color: red;font-size: 1rem;"></span>
+                                    @if ($errors->has('name'))
+                                        <div class="alert alert-danger">{{ $errors->first('name') }}</div>
+                                    @endif
                                 </fieldset>
                                 <div class="form-group">
                                     <label>Status</label>

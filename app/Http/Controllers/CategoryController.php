@@ -85,12 +85,13 @@ class CategoryController extends Controller
         // validate
         $validator = Validator::make($request->all(),
             [
-                'name' => 'required|min:2|max:255'
+                'name' => 'required|min:2|max:255|unique:categories,name,' . $id
             ],
             [
-                'required' => 'Tên danh mục không được bỏ trống',
-                'min'      => 'Tên danh mục phải từ 2-255 ký tự',
-                'max'      => 'Tên danh mục phải từ 2-255 ký tự'
+                'name.unique'   => ':attributes đã tồn tại',
+                'name.required' => 'Tên danh mục không được bỏ trống',
+                'name.min'      => 'Tên danh mục phải từ 2-255 ký tự',
+                'name.max'      => 'Tên danh mục phải từ 2-255 ký tự'
             ]);
         if ($validator->fails())
         {
@@ -103,7 +104,7 @@ class CategoryController extends Controller
             'slug'   => str_slug($request->name),
             'status' => $request->status,
         ]);
-        return response()->json(['success' => 'Cập nhập danh mục thành công']);
+        return response()->json(['message' => 'Cập nhập danh mục thành công']);
     }
 
     /**
@@ -116,6 +117,6 @@ class CategoryController extends Controller
     {
         $category = Categories::find($id);
         $category->delete();
-        return response()->json(['success' => 'Xóa danh mục thành công' ]);
+        return response()->json(['message' => 'Xóa danh mục thành công']);
     }
 }

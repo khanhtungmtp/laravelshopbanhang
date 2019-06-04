@@ -14,6 +14,6 @@ class Categories extends Model
     // xem category co nhung producttype nao
     public function productType()
     {
-        return $this->hasMany('App\Models\ProductType', 'idCategory', 'id');
+        return $this->hasMany('App\Models\ProductTypes', 'idCategory', 'id');
     }
 }
