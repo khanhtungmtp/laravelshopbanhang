@@ -20,8 +20,8 @@ class CreateProductsTable extends Migration
             $table->string('image');
             $table->text('description');
             $table->integer('quantity');
-            $table->decimal('price');
-            $table->decimal('promotional');
+            $table->integer('price');
+            $table->integer('promotional');
             $table->integer('idCategory');
             $table->integer('idProductType');
             $table->integer('status')->default(1);

@@ -188,4 +188,133 @@ $(document).ready(function () {
             }
         });
     });
+
+    // ajax xóa sản phẩm
+    $('.deleteProduct').click(function () {
+        let id = $(this).data('id');
+        // nếu click xác nhận xóa
+        $('.confirmDelProduct').click(function () {
+            $.ajax({
+                url: ' admin/product/' + id,
+                type: 'delete',
+                dataType: 'json',
+                success: function (result) {
+                    toastr.success(result.success, 'Thông báo', {timeOut: 5000});
+                    $('#deleteProduct').modal('hide');
+                    location.reload();
+                }
+            });
+        })
+    })
+
+    // edit product
+    $('.editProduct').click(function () {
+        let id = $(this).data('id')
+        $('.errorName').hide();
+        $('.errorQuantity').hide();
+        $('.errorPrice').hide();
+        $('.errorPromotional').hide();
+        $('.errorImage').hide();
+        $('.errorDescription').hide();
+        $.ajax({
+            url: 'admin/product/' + id + '/edit',
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                // console.log(data)
+                $('.name').val(data.product.name)
+                $('.quantity').val(data.product.quantity)
+                $('.price').val(data.product.price)
+                $('.promotional').val(data.product.promotional)
+                $('.imageThum').attr('src', 'img/upload/product/' + data.product.image)
+                if (data.product.status === 1) {
+                    $('.show-item').attr('selected', 'selected')
+                } else {
+                    $('.hidden-item').attr('selected', 'selected')
+                }
+                CKEDITOR.instances['description'].setData(data.product.description);
+                let categoryHTML = ''
+                $.each(data.category, function (key, value) {
+                    if (data.category === value['id']){
+                        categoryHTML += '<option value="' + value['id'] + '" selected>'
+                        categoryHTML += value['name']
+                        categoryHTML += '</option>'
+                    } else {
+                        categoryHTML += '<option value="' + value['id'] + '">'
+                        categoryHTML += value['name']
+                        categoryHTML += '</option>'
+                    }
+                })
+
+                let productTypeHTML = ''
+                $.each(data.product_type, function (key, value) {
+                    if (data.product_type === value['id']){
+                        productTypeHTML += '<option value="' + value['id'] + '" selected>'
+                        productTypeHTML += value['name']
+                        productTypeHTML += '</option>'
+                    } else {
+                        productTypeHTML += '<option value="' + value['id'] + '">'
+                        productTypeHTML += value['name']
+                        productTypeHTML += '</option>'
+                    }
+                })
+                $('.cateProduct').html(categoryHTML)
+                $('.proType').html(productTypeHTML)
+            }
+        })
+        // update product
+        $('#updateProduct').on('submit',function (e) {
+            // ngăn submit form
+            e.preventDefault()
+            $.ajax({
+                url: ' admin/product/' + id,
+                data : new FormData(this),
+                contentType : false,
+                processData : false,
+                cache : false,
+                type : 'put',
+                success: function (data) {
+                    console.log(data)
+                    if (data.error == true){
+                        if(data.message.image){
+                            $('.errorImage').show();
+                            $('.errorImage').text(data.message.image[0]);
+                            $('.image').val('');
+                        }
+                        if(data.message.name){
+                            $('.errorName').show();
+                            $('.errorName').text(data.message.name[0]);
+                            $('.name').val('');
+                        }
+                        if(data.message.quantity){
+                            $('.errorQuantity').show();
+                            $('.errorQuantity').text(data.message.quantity[0]);
+                            $('.quantity').val('');
+                        }
+                        if(data.message.price){
+                            $('.errorPrice').show();
+                            $('.errorPrice').text(data.message.price[0]);
+                            $('.price').val('');
+                        }
+                        if(data.message.promotional){
+                            $('.errorPromotional').show();
+                            $('.errorPromotional').text(data.message.promotional[0]);
+                            $('.promotional').val('');
+                        }
+                        if(data.message.description){
+                            $('.errorDescription').show();
+                            $('.errorDescription').text(data.message.description[0]);
+                            $('.description').val('');
+                        }
+                    } else {
+                        toastr.success(data.result, 'Thông báo', {timeOut: 5000});
+                        $('#editProduct').modal('hide');
+                        location.reload();
+                    }
+                }
+            })
+        })
+    })
+
+
 });

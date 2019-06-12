@@ -37,7 +37,7 @@ class StoreProductRequest extends FormRequest
         return [
             'required' => ':attribute là trường bắt buộc ',
             'string'   => ':attribute phải là dạng chuỗi',
-            'image'    => ':attribute phải là hình',
+            'image'    => ':attribute chỉ hỗ trợ các đuôi png, jpeg, gif, jpg',
             'min'      => ':attribute phải từ 2-50 ký tự',
             'max'      => ':attribute phải từ 2-50 ký tự',
             'unique'   => ':attribute đã tồn tại',

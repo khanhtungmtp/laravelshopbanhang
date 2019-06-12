@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('admin.pages.index');
+    return view('client.pages.index');
 });
 
 Route::get('getProductType', 'AjaxController@getProductType');

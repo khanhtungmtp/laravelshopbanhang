@@ -6,6 +6,8 @@ use App\Http\Requests\StoreProductRequest;
 use App\Models\Categories;
 use App\Models\Product;
 use App\Models\ProductTypes;
+use Illuminate\Support\Facades\File;
+use Validator;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -18,7 +20,8 @@ class ProductController extends Controller
     public function index()
     {
         //
-        $product = Product::all();
+        $product = Product::paginate(10);
+        //        dd($product);die;
         return view('admin.pages.product.list', compact('product'));
     }
 
@@ -47,23 +50,23 @@ class ProductController extends Controller
         // kiểm tra có upload hình
         if ($request->hasFile('image'))
         {
-            $file      = $request->image;
+            $file      = $request->file('image');
             $file_name = $file->getClientOriginalName();
             $file_type = strtolower($file->getMimeType());
             $file_size = $file->getSize();
             $img_type  = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
             // chỉ chấp nhận file hình có đuôi như trên
-            if (in_array($file_type, $img_type, true))
+            if (in_array($file_type, $img_type))
             {
                 if ($file_size < 1048576)
                 {
-                    $file_name = date('DD-mm-yyyy') . '-' . str_slug($file_name);
-                    if ($file->move('img/upload/product/', $file_name))
+                    $file_name = date('DD-mm-yyyy') . '-' . rand() . '-' . $file_name;
+                    if (empty($errors))
                     {
-                        $data['image'] = $file_name;
-                    } else
-                    {
-                        return back()->with(['error' => 'Có lỗi khi upload ảnh']);
+                        if (!$file->move('img/upload/product/', $file_name))
+                        {
+                            return back()->with(['error' => 'Có lỗi khi upload ảnh']);
+                        }
                     }
                 } else
                 {
@@ -79,8 +82,10 @@ class ProductController extends Controller
         }
         if (empty($errors))
         {
-            $data         = $request->all();
-            $data['slug'] = str_slug($file_name);
+            $data          = $request->all();
+            $data['image'] = $file_name;
+            $data['slug']  = str_slug($file_name);
+
             Product::create($data);
             return redirect()->route('product.index')->with('message', 'Thêm mới sản phẩm thành công');
         }
@@ -92,42 +97,125 @@ class ProductController extends Controller
      * @param \App\Product $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($id)
     {
         //
+
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Product $product
+     * @param $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit($id)
     {
-        //
+        // hiện trang sửa
+        $product_type = ProductTypes::where('status', 1)->get();
+        $category     = Categories::where('status', 1)->get();
+        $product      = Product::find($id);
+        return response()->json(['category' => $category, 'product_type' => $product_type, 'product' => $product], 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Product             $product
+     * @param                          $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        //
+        $data      = $request->all();
+        $data['slug'] = str_slug($request->name);
+        $product   = Product::find($id);
+        $validator = Validator::make($request->all(),
+            [
+                'name'        => 'required|string|min:2|max:50|unique:products',
+                'image'       => 'required|image|mimes:jpeg,jpg,png,gif',
+                'price'       => 'required|numeric',
+                'quantity'    => 'required|numeric',
+                'promotional' => 'required|numeric'
+            ],
+            [
+                'required' => ':attribute là trường bắt buộc ',
+                'string'   => ':attribute phải là dạng chuỗi',
+                'image'    => ':attribute chỉ hỗ trợ các đuôi png, jpeg, gif, jpg',
+                'min'      => ':attribute phải từ 2-50 ký tự',
+                'max'      => ':attribute phải từ 2-50 ký tự',
+                'unique'   => ':attribute đã tồn tại',
+                'mimes'    => ':attribute có đuôi không được hỗ trợ',
+                'numeric'  => ':attribute phải là số',
+            ],
+            [
+                'name'        => 'Tên sản phẩm',
+                'image'       => 'Hình ảnh',
+                'price'       => 'Giá',
+                'quantity'    => 'Số lượng',
+                'promotional' => 'Giá khuyến mãi'
+            ]);
+        if ($validator->fails())
+        {
+            return response()->json(['error' => true, 'message' => $validator->errors()], 200);
+        }
+        // kiểm tra có upload hình
+        if ($request->hasFile('image'))
+        {
+            $file      = $request->file('image');
+            $file_name = $file->getClientOriginalName();
+            $file_type = strtolower($file->getMimeType());
+            $file_size = $file->getSize();
+            $img_type  = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
+            // chỉ chấp nhận file hình có đuôi như trên
+            if (in_array($file_type, $img_type))
+            {
+                if ($file_size < 1048576)
+                {
+                    $file_name = date('DD-mm-yyyy') . '-' . rand() . '-' . $file_name;
+                    if (empty($errors))
+                    {
+                        if ($file->move('img/upload/product/', $file_name))
+                        {
+                            $data['image'] = $file_name;
+                            if (File::exists('img/upload/product/', $product->image))
+                            {
+                                // xóa file
+                                unlink('img/upload/product/', $product->image);
+                            }
+                        } else
+                        {
+                            return back()->with(['error' => 'Có lỗi khi upload ảnh']);
+                        }
+                    }
+                } else
+                {
+                    return back()->with(['error' => 'Bạn không upload hình quá 1MB']);
+                }
+            } else
+            {
+                return back()->with(['error' => 'File không phải là hình, hoặc có đuôi file không hỗ trợ']);
+            }
+        } else
+        {
+            // không up hình thì lấy hình củ
+            $data['image'] = $product->image;
+        }
+        $product->update($data);
+        return response()->json(['message' => 'Cập nhập sản phẩm thành công'], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Product $product
+     * @param $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
         //
+        $product = Product::find($id);
+        $product->delete();
+        return response()->json(['success' => 'Xóa thành công sản phẩm có id' . $id], 200);
     }
 }

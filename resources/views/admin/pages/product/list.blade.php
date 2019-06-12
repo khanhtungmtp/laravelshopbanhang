@@ -15,8 +15,6 @@
                         <th>STT</th>
                         <th>Tên</th>
                         <th>Số lượng</th>
-                        <th>Giá</th>
-                        <th>Giá khuyến mãi</th>
                         <th>Loại sản phẩm</th>
                         <th>Danh mục</th>
                         <th>Trạng thái</th>
@@ -28,8 +26,6 @@
                         <th>STT</th>
                         <th>Tên</th>
                         <th>Số lượng</th>
-                        <th>Giá</th>
-                        <th>Giá khuyến mãi</th>
                         <th>Loại sản phẩm</th>
                         <th>Danh mục</th>
                         <th>Trạng thái</th>
@@ -39,16 +35,18 @@
                     <tbody>
                     @foreach ($product as $key => $pro)
                         <tr>
-                            <td>{{ $key }}</td>
-                            <td>{{ $pro->name }}</td>
+                            <td>{{ $key + 1 }}</td>
+                            <td>
+                                {{ $pro->name }}
+                                <br>
+                                <img src="img/upload/product/{{ $pro->image }}" alt="" width="100" height="100">
+                            </td>
                             <td>
                               <b>Số lượng:</b>  {{ $pro->quantity }}
                                 <br>
                               <b>Giá:</b>  {{ $pro->price }}
                                 <br>
                               <b>Khuyến mãi:</b>  {{ $pro->promotional }}
-                                <br>
-                              <b>Hình:</b> <img src="img/upload/product/{{ $pro->image }}" alt="" width="100" height="100">
                             </td>
                             <td>{{ $pro->productType->name }}</td>
                             {{-- ->category là hàm trong models producttype --}}
@@ -93,36 +91,64 @@
                 <div class="modal-body">
                     <div class="row" style="margin: 5px">
                         <div class="col-lg-12">
-                            <form role="form">
+                            <form role="form" id="updateProduct" method="post" enctype="multipart/form-data">
                                 <fieldset class="form-group">
-                                    <label>Name</label>
+                                    <label>Tên sản phẩm</label>
                                     <input class="form-control name" name="name" placeholder="Nhập tên sản phẩm">
-                                    <span class="error" style="color: red;font-size: 1rem;"></span>
-                                    @if ($errors->has('name'))
-                                        <div class="alert alert-danger">{{ $errors->first('name') }}</div>
-                                    @endif
+                                    <div class="alert alert-danger errorName"></div>
                                 </fieldset>
                                 <div class="form-group">
-                                    <label>Category</label>
-                                    <select class="form-control idCategory" name="idCategory">
-                                        <option value="">Category</option>
+                                    <label for="quantity">Số lượng</label>
+                                    <input type="number" name="quantity" min="1" value="1" class="form-control quantity">
+                                    <div class="alert alert-danger errorQuantity"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="price">Đơn giá</label>
+                                    <input type="text" name="price" placeholder="Nhập đơn giá" class="form-control price">
+                                    <div class="alert alert-danger errorPrice"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="price">Giá khuyến mại</label>
+                                    <input type="text" name="promotional" placeholder="Nhập giá khuyến mại nếu có" class="form-control promotional">
+                                    <div class="alert alert-danger errorPromotional"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="price">Ảnh minh họa</label>
+                                    <img class="img img-thumbnail imageThum" width="100" height="100" lign="center">
+                                    <input type="file" name="image" class="form-control image">
+                                    <div class="alert alert-danger errorImage"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mô tả sản phẩm</label>
+                                    <textarea name="description" id="description" cols="5" rows="5" class="form-control"></textarea>
+                                    <div class="alert alert-danger errorDescription"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Danh mục sản phẩm</label>
+                                    <select class="form-control cateProduct" name="idCategory">
+
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Loại sản phẩm</label>
+                                    <select class="form-control proType" name="idProductType">
+
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Status</label>
-                                    <select class="form-control status" name="status">
-                                        <option value="1">Hiển Thị</option>
-                                        <option value="0">Không Hiển Thị</option>
+                                    <select class="form-control" name="status">
+                                        <option value="1" class="show-item">Hiển Thị</option>
+                                        <option value="0" class="hidden-item">Không Hiển Thị</option>
                                     </select>
                                 </div>
+                                <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
                             </form>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success updateProduct">Lưu thay đổi</button>
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                </div>
+
             </div>
         </div>
     </div>
@@ -138,7 +164,7 @@
                     </button>
                 </div>
                 <div class="modal-body" style="margin-left: 183px;">
-                    <button type="button" class="btn btn-success confirmDelProType">Có</button>
+                    <button type="button" class="btn btn-success confirmDelProduct">Có</button>
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Không</button>
                     <div>
                     </div>
@@ -146,4 +172,10 @@
             </div>
         </div>
     </div>
+@endsection
+@section('ckeditor')
+    <script src="ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('description')
+    </script>
 @endsection

@@ -34,7 +34,7 @@
                     </div>
                     <div class="form-group">
                         <label for="price">Giá khuyến mại</label>
-                        <input type="text" name="promotional" value="0" placeholder="Nhập giá khuyến mại nếu có" class="form-control">
+                        <input type="text" name="promotional" placeholder="Nhập giá khuyến mại nếu có" class="form-control">
                         @if($errors->has('promotional'))
                             <div class="alert alert-danger">{{ $errors->first('promotional') }}</div>
                         @endif

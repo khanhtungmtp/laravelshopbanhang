@@ -46,7 +46,7 @@ class CategoryController extends Controller
             'slug'   => str_slug($request->name),
             'status' => $request->status,
         ]);
-        return redirect(route('category.index'));
+        return redirect(route('category.index'))->with('message','Thêm mới danh mục thành công');
     }
 
     /**
