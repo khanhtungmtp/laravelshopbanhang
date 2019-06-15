@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('client.pages.index');
-});
+Route::get('/', 'HomeController@index');
 
 Route::get('getProductType', 'AjaxController@getProductType');
 Route::group(['prefix' => 'admin'], function ()
@@ -22,3 +20,8 @@ Route::group(['prefix' => 'admin'], function ()
     Route::resource('product-type', 'ProductTypeController');
     Route::resource('product', 'ProductController');
 });
+// Đăng nhập facebook
+Route::get('callback/{social}','UserController@handleProviderCallback');
+Route::get('login/{social}','UserController@redirectToProvider')->name('login.social');
+Route::get('logout','UserController@logout');
+Route::post('register','UserController@register')->name('register');
