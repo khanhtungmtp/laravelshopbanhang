@@ -78,7 +78,7 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title text-center">Log In</h5>
+					<h5 class="modal-title text-center">Đăng nhập</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -86,25 +86,28 @@
 				<div class="modal-body">
 					<form action="#" method="post">
 						<div class="form-group">
-							<label class="col-form-label">Username</label>
+							<label class="col-form-label">Tài khoản</label>
 							<input type="text" class="form-control" placeholder=" " name="Name" required="">
 						</div>
 						<div class="form-group">
-							<label class="col-form-label">Password</label>
+							<label class="col-form-label">Mật khẩu</label>
 							<input type="password" class="form-control" placeholder=" " name="Password" required="">
 						</div>
 						<div class="right-w3l">
 							<input type="submit" class="form-control" value="Log in">
 						</div>
+                        <div class="right-w3l">
+                            <a href="{{ URL::to('login/facebook') }}" class="btn btn-primary">Đăng nhập bằng facebook</a>
+						</div>
 						<div class="sub-w3l">
 							<div class="custom-control custom-checkbox mr-sm-2">
 								<input type="checkbox" class="custom-control-input" id="customControlAutosizing">
-								<label class="custom-control-label" for="customControlAutosizing">Remember me?</label>
+								<label class="custom-control-label" for="customControlAutosizing">Nhớ mật khẩu?</label>
 							</div>
 						</div>
-						<p class="text-center dont-do mt-3">Don't have an account?
+						<p class="text-center dont-do mt-3">Bạn chưa có tài khoản?
 							<a href="#" data-toggle="modal" data-target="#exampleModal2">
-								Register Now</a>
+								Đăng ký ngay</a>
 						</p>
 					</form>
 				</div>
@@ -116,36 +119,37 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">Register</h5>
+					<h5 class="modal-title">Đăng ký</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					<form action="#" method="post">
+					<form action="{{ route('register') }}" method="post">
+						@csrf
 						<div class="form-group">
-							<label class="col-form-label">Your Name</label>
-							<input type="text" class="form-control" placeholder=" " name="Name" required="">
+							<label class="col-form-label">Họ tên</label>
+							<input type="text" class="form-control" placeholder="Nguyễn văn A " name="name" required="">
 						</div>
 						<div class="form-group">
 							<label class="col-form-label">Email</label>
-							<input type="email" class="form-control" placeholder=" " name="Email" required="">
+							<input type="email" class="form-control" placeholder="test@me.com " name="email" required="">
 						</div>
 						<div class="form-group">
-							<label class="col-form-label">Password</label>
-							<input type="password" class="form-control" placeholder=" " name="Password" id="password1" required="">
+							<label class="col-form-label">Mật khẩu</label>
+							<input type="password" class="form-control" placeholder="Mật khẩu " name="password" id="password1" required="">
 						</div>
 						<div class="form-group">
-							<label class="col-form-label">Confirm Password</label>
-							<input type="password" class="form-control" placeholder=" " name="Confirm Password" id="password2" required="">
+							<label class="col-form-label">Điền lại mật khẩu</label>
+							<input type="password" class="form-control" placeholder="Điền lại mật khẩu " name="re_password" id="password2" required="">
 						</div>
 						<div class="right-w3l">
-							<input type="submit" class="form-control" value="Register">
+							<input type="submit" class="form-control" value="Đăng ký">
 						</div>
 						<div class="sub-w3l">
 							<div class="custom-control custom-checkbox mr-sm-2">
 								<input type="checkbox" class="custom-control-input" id="customControlAutosizing2">
-								<label class="custom-control-label" for="customControlAutosizing2">I Accept to the Terms & Conditions</label>
+								<label class="custom-control-label" for="customControlAutosizing2">Tôi chấp nhận các điều khoản và điều kiện</label>
 							</div>
 						</div>
 					</form>

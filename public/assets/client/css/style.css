@@ -152,7 +152,7 @@ p.dont-do a {
     transition: 0.5s all;
 }
 
-.right-w3l input[type="submit"] {
+.right-w3l input[type="submit"], .right-w3l a {
     cursor: pointer;
     letter-spacing: 1px;
     padding: 10px 0;
@@ -164,6 +164,14 @@ p.dont-do a {
     -moz-transition: 0.5s all;
     -ms-transition: 0.5s all;
     transition: 0.5s all;
+}
+
+.right-w3l a {
+    width: 448px;
+    height: 46px;
+    border-radius: 0;
+    margin-top: -14px;
+    letter-spacing: 1px;
 }
 
 input[type="button"],
@@ -2186,19 +2194,19 @@ div#testimonials h4.m-title {
 	display: inherit;
 }
 
-/*-- placeholder-color 
+/*-- placeholder-color
 
 ::-webkit-input-placeholder {
     color: #fff;
 }
 
 :-moz-placeholder {
-    /* Firefox 18- 
+    /* Firefox 18-
     color: #fff;
 }
 
 ::-moz-placeholder {
-    /* Firefox 19+ 
+    /* Firefox 19+
     color: #fff;
 }
 
