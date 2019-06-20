@@ -40,7 +40,7 @@
                                             <del>{{ number_format($samsung->promotional) }}</del>
                                         </div>
                                         <div class="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                                            <a href="#">Thêm vào giỏ</a>
+                                            <a href="{{ route('addCart', ['id' => $samsung->id]) }}" class="btn btn-primary">Thêm vào giỏ</a>
                                         </div>
                                     </div>
                                 </div>

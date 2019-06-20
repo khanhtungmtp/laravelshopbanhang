@@ -52,19 +52,6 @@
 				<optgroup label="Popular Cities">
 					<option selected style="display:none;color:#eee;">Select City</option>
 					<option>Birmingham</option>
-					<option>Anchorage</option>
-					<option>Phoenix</option>
-					<option>Little Rock</option>
-					<option>Los Angeles</option>
-					<option>Denver</option>
-					<option>Bridgeport</option>
-					<option>Wilmington</option>
-					<option>Jacksonville</option>
-					<option>Atlanta</option>
-					<option>Honolulu</option>
-					<option>Boise</option>
-					<option>Chicago</option>
-					<option>Indianapolis</option>
 				</optgroup>
 			</select>
 			<div class="clearfix"></div>

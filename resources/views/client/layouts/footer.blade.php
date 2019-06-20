@@ -200,3 +200,8 @@
 <!-- //for bootstrap working -->
 <script src="assets/client/js/custom.js"></script>
 <!-- //js-files -->
+@if(session('message'))
+    <script type="text/javascript">
+        toastr.success('{{ session('message') }}', 'Thông báo', {timeOut: 5000});
+    </script>
+@endif

@@ -252,7 +252,7 @@ input[type="submit"] {
 
 /*-- header cart button --*/
 
-button.w3view-cart {
+button.w3view-cart,a.w3view-cart {
     font-size: 20px;
     color: #fff;
     width: 50px;
