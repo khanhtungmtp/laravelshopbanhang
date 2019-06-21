@@ -42,8 +42,8 @@ class CartController extends Controller
      */
     public function index()
     {
-        //
         $carts = Cart::content();
+        //dd($carts);
         return view('client.pages.cart', compact('carts'));
     }
 
@@ -100,6 +100,14 @@ class CartController extends Controller
     public function update(Request $request, $id)
     {
         //
+        if ($request->ajax()){
+            if ($request->qty == 0){
+                return response()->json(['error' => 'Sản phẩm phải >= 1'],200);
+            } else {
+                Cart::update($id, $request->qty);
+                return response()->json(['message' => 'Cập nhập số lượng sản phẩm thành công'],200);
+            }
+        }
     }
 
     /**

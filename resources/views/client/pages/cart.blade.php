@@ -59,11 +59,7 @@
                                 <td class="invert">
                                     <div class="quantity">
                                         <div class="quantity-select">
-                                            <div class="entry value-minus">&nbsp;</div>
-                                            <div class="entry value">
-                                                <span>{{ $cart->qty }}</span>
-                                            </div>
-                                            <div class="entry value-plus active">&nbsp;</div>
+                                            <input type="number" class="qty" value="{{ $cart->qty }}" name="qty" data-id="{{ $cart->rowId }}">
                                         </div>
                                     </div>
                                 </td>
@@ -71,7 +67,7 @@
                                 <td class="invert">{{ $cart->price }}</td>
                                 <td class="invert">
                                     <div class="rem">
-                                        <div class="close1"> </div>
+                                        <div class="close1" data-id="{{ $cart->rowId }}"> </div>
                                     </div>
                                 </td>
                             </tr>

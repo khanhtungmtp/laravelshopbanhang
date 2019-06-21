@@ -199,6 +199,8 @@
 <script src="assets/client/js/bootstrap.js"></script>
 <!-- //for bootstrap working -->
 <script src="assets/client/js/custom.js"></script>
+<script src="assets/client/js/toastr.min.js"></script>
+<script src="assets/client/js/ajax.js"></script>
 <!-- //js-files -->
 @if(session('message'))
     <script type="text/javascript">

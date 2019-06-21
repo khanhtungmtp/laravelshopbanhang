@@ -8,6 +8,7 @@
 	<meta charset="UTF-8" />
 	<meta name="keywords" content="Electro Store Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design"
 	/>
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<script>
 		addEventListener("load", function () {
 			setTimeout(hideURLbar, 0);
@@ -29,6 +30,7 @@
 	<link href="assets/client/css/popuo-box.css" rel="stylesheet" type="text/css" media="all" />
 	<!-- pop-up-box -->
 	<link href="assets/client/css/menu.css" rel="stylesheet" type="text/css" media="all" />
+	<link href="assets/client/css/toastr.css" rel="stylesheet" type="text/css" media="all" />
 	<!-- menu style -->
 	<!-- //Custom-Files -->
 
