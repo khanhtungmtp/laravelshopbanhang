@@ -118,6 +118,7 @@ class CartController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Cart::remove($id);
+        return response()->json(['message' => 'Xóa thành công sản phẩm ra khỏi giỏ hàng'],200);
     }
 }

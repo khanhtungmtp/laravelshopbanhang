@@ -4,6 +4,7 @@ $.ajaxSetup({
     }
 });
 $(document).ready(function () {
+    // update quantity
     $('.qty').blur(function () {
         let id = $(this).data('id');
         $.ajax({
@@ -23,5 +24,22 @@ $(document).ready(function () {
                 }
             }
         })
-    })
+    });
+    // delete cart
+    $('.close1').click(function () {
+        $('#deleteCart').modal('show');
+        let id = $(this).data('id');
+        $('.confirmDelCart').click(function () {
+            $.ajax({
+                url: 'cart/' + id,
+                type: 'delete',
+                dataType: 'json',
+                success: function (data) {
+                    $('#deleteCart').modal('hide');
+                    toastr.success(data.message, 'Thông báo', {timeOut: 5000});
+                    location.reload();
+                }
+            })
+        })
+    });
 });
