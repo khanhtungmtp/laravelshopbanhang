@@ -25,6 +25,7 @@ Route::get('callback/{social}','UserController@handleProviderCallback');
 Route::get('login/{social}','UserController@redirectToProvider')->name('login.social');
 Route::get('logout','UserController@logout');
 Route::post('register','UserController@register')->name('register');
+Route::post('login','UserController@loginClient')->name('login.client');
 // Cart
 Route::resource('cart','CartController');
 Route::get('add-cart/{id}','CartController@addCart')->name('addCart');

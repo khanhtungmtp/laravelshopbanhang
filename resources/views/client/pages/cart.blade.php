@@ -138,7 +138,7 @@
                         </div>
                     </form>
                     <div class="checkout-right-basket">
-                        <a href="payment.html">Make a Payment
+                        <a href="/checkout">Make a Payment
                             <span class="far fa-hand-point-right"></span>
                         </a>
                     </div>

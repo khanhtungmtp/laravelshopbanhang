@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Categories;
 use App\Models\Customer;
+use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Product;
 use App\Models\ProductTypes;
 use Auth;
@@ -72,14 +74,32 @@ class CartController extends Controller
     }
 
     /**
-     * thêm mới địa chỉ giao hàng
+     * Mua hàng
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
+        $data               = $request->all();
+        $data['code_order'] = 'code_order' . rand();
+        $data['idUser']     = Auth::user()->id;
+        $data['money']      = str_replace(',', '', $request->money);
+        $order              = Order::create($data);
 
+        // luu chi tiet hoa don
+        $idOrder     = $order->id;
+        $orderDetail = [];
+        foreach (Cart::content() as $cart)
+        {
+            $orderDetail['idProduct'] = $cart->id;
+            $orderDetail['idOrder']   = $idOrder;
+            $orderDetail['quantity']  = $cart->qty;
+            $orderDetail['price']     = $cart->price;
+            OrderDetail::create($orderDetail);
+        }
+        Cart::destroy();
+        return response()->json('Đặt hàng thành công! Cám ơn quý khách', 200);
     }
 
     /**

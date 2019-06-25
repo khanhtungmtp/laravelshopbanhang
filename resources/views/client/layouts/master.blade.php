@@ -73,14 +73,15 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<form action="#" method="post">
+					<form action="{{route('login.client')}}" method="post">
+                        @csrf
 						<div class="form-group">
 							<label class="col-form-label">Tài khoản</label>
-							<input type="text" class="form-control" placeholder=" " name="Name" required="">
+							<input type="text" class="form-control" placeholder=" " name="name" required="">
 						</div>
 						<div class="form-group">
 							<label class="col-form-label">Mật khẩu</label>
-							<input type="password" class="form-control" placeholder=" " name="Password" required="">
+							<input type="password" class="form-control" placeholder=" " name="password" required="">
 						</div>
 						<div class="right-w3l">
 							<input type="submit" class="form-control" value="Log in">

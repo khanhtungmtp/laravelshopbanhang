@@ -103,11 +103,22 @@ class UserController extends Controller
         $data = $request->all();
         $data['password'] = Hash::make($request->password);
         $user = User::create($data);
-        if (!$error){
-            Auth::login($user);
-//            return back()->with('message', 'Đăng ký tài khoản thành công');
-        } else {
-            return response()->json(['error' => 'Đăng ký tài khoản thất bại, vui lòng kiểm tra lại'], 200);
+        Auth::login($user);
+        return back()->with('message', 'Đăng ký tài khoản thành công');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function loginClient(Request $request)
+    {
+        $data = $request->only('email','password');
+        if(Auth::attempt($data,$request->has('remember'))){
+            return back()->with('message','Đăng nhập thành công');
+        }else{
+            return back()->with('error','Đăng nhập thất bại. Xin vui lòng kiểm tra lại tài khoản');
         }
     }
 

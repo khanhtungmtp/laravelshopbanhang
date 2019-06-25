@@ -48,7 +48,6 @@ $(document).ready(function () {
     let errorEmailSelector = $('.errorEmail');
     let errorAddressSelector = $('.errorAddress');
     let errorPhoneSelector = $('.errorPhone');
-
     errorEmailSelector.hide();
     errorAddressSelector.hide();
     errorPhoneSelector.hide();
@@ -80,7 +79,7 @@ $(document).ready(function () {
             },
             error: function (data) {
                 // console.log(data)
-                let error =$.parseJSON(data.responseText);
+                let error = $.parseJSON(data.responseText);
                 if (typeof error.errors.email != 'undefined' && error.errors.email.length > 0) {
                     errorEmailSelector.show();
                     errorEmailSelector.html(error.errors.email)
@@ -93,6 +92,43 @@ $(document).ready(function () {
                     errorAddressSelector.show();
                     errorAddressSelector.html(error.errors.address)
                 }
+            }
+        });
+    });
+
+    // thanh toan
+    $('.payment').click(function () {
+        let email = '';
+        let address = '';
+        let name = '';
+        let phone = '';
+        let note = $('.note').val();
+        let paytotal = $('.paytotal').text();
+        paytotal = paytotal.replace(' VNĐ', '');
+        let radioAddress = $('input[name=rdoaddress]');
+        $.each(radioAddress, function (key, value) {
+            if (value.checked === true) {
+                email = value.value;
+                name = $('.name' + key).text();
+                address = $('.address' + key).text();
+                phone = $('.phone' + key).text();
+            }
+        });
+        $.ajax({
+            url: 'cart',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                email: email,
+                name: name,
+                phone: phone,
+                address: address,
+                message: note,
+                money: paytotal
+            },
+            success: function (data) {
+                toastr.success(data, 'Thông báo', {timeOut: 5000});
+                location.href = '/';
             }
         });
     });

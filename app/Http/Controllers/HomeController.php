@@ -22,9 +22,9 @@ class HomeController extends Controller
     public function index()
     {
         // samsung
-        $product_samsung = Product::where('status', 1)->where('idProductType', 1)->get();
+        $product_samsung = Product::where('status', 1)->where('idProductType', 2)->get();
         // nokia
-        $product_nokia = Product::where('status', 1)->where('idProductType', 2)->get();
+        $product_nokia = Product::where('status', 1)->where('idProductType', 4)->get();
         return view('client.pages.index',compact('product_samsung', 'product_nokia'));
     }
 }
