@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories;
+use App\Models\Customer;
 use App\Models\Product;
 use App\Models\ProductTypes;
+use Auth;
 use Cart;
 use Illuminate\Http\Request;
 
@@ -48,6 +50,18 @@ class CartController extends Controller
     }
 
     /**
+     * checkout
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function checkout()
+    {
+        $user  = Auth::user();
+        $price = str_replace(',', '', Cart::total());
+        return view('client.pages.checkout', compact('user', 'price'));
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -58,14 +72,14 @@ class CartController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * thêm mới địa chỉ giao hàng
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -100,12 +114,15 @@ class CartController extends Controller
     public function update(Request $request, $id)
     {
         //
-        if ($request->ajax()){
-            if ($request->qty == 0){
-                return response()->json(['error' => 'Sản phẩm phải >= 1'],200);
-            } else {
+        if ($request->ajax())
+        {
+            if ($request->qty == 0)
+            {
+                return response()->json(['error' => 'Sản phẩm phải >= 1'], 200);
+            } else
+            {
                 Cart::update($id, $request->qty);
-                return response()->json(['message' => 'Cập nhập số lượng sản phẩm thành công'],200);
+                return response()->json(['message' => 'Cập nhập số lượng sản phẩm thành công'], 200);
             }
         }
     }
@@ -119,6 +136,6 @@ class CartController extends Controller
     public function destroy($id)
     {
         Cart::remove($id);
-        return response()->json(['message' => 'Xóa thành công sản phẩm ra khỏi giỏ hàng'],200);
+        return response()->json(['message' => 'Xóa thành công sản phẩm ra khỏi giỏ hàng'], 200);
     }
 }

@@ -118,19 +118,19 @@
 						@csrf
 						<div class="form-group">
 							<label class="col-form-label">Họ tên</label>
-							<input type="text" class="form-control" placeholder="Nguyễn văn A " name="name" required="">
+							<input type="text" class="form-control" placeholder="Nguyễn văn A " name="name" >
 						</div>
 						<div class="form-group">
 							<label class="col-form-label">Email</label>
-							<input type="email" class="form-control" placeholder="test@me.com " name="email" required="">
+							<input type="email" class="form-control" placeholder="test@me.com " name="email" >
 						</div>
 						<div class="form-group">
 							<label class="col-form-label">Mật khẩu</label>
-							<input type="password" class="form-control" placeholder="Mật khẩu " name="password" id="password1" required="">
+							<input type="password" class="form-control" placeholder="Mật khẩu " name="password" id="password1" >
 						</div>
 						<div class="form-group">
 							<label class="col-form-label">Điền lại mật khẩu</label>
-							<input type="password" class="form-control" placeholder="Điền lại mật khẩu " name="re_password" id="password2" required="">
+							<input type="password" class="form-control" placeholder="Điền lại mật khẩu " name="re_password" id="password2">
 						</div>
 						<div class="right-w3l">
 							<input type="submit" class="form-control" value="Đăng ký">

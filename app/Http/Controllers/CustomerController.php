@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Customer;
+use App\Models\Customer;
+use App\Http\Requests\CustomerRequest;
 use Illuminate\Http\Request;
+use Auth;
 
 class CustomerController extends Controller
 {
@@ -30,18 +32,37 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CustomerRequest $request)
     {
-        //
+        if ($request->ajax())
+        {
+            $data           = $request->only('email', 'phone', 'address');
+            $data['idUser'] = Auth::user()->id;
+            if ($request->active == 1)
+            {
+                $data['active'] = 1;
+                $customer       = Customer::where('idUser', Auth::user()->id)->where('active', 1)->first();
+                if (!empty($customer))
+                {
+                    $customer->active = 0;
+                    $customer->save();
+                }
+            } else
+            {
+                $data['active'] = 0;
+            }
+            Customer::create($data);
+            return response()->json('Đã thêm địa chỉ nhận hàng thành công', 200);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Customer  $customer
+     * @param \App\Customer $customer
      * @return \Illuminate\Http\Response
      */
     public function show(Customer $customer)
@@ -52,7 +73,7 @@ class CustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Customer  $customer
+     * @param \App\Customer $customer
      * @return \Illuminate\Http\Response
      */
     public function edit(Customer $customer)
@@ -63,8 +84,8 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Customer  $customer
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Customer            $customer
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Customer $customer)
@@ -75,7 +96,7 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Customer  $customer
+     * @param \App\Customer $customer
      * @return \Illuminate\Http\Response
      */
     public function destroy(Customer $customer)

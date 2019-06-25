@@ -207,3 +207,8 @@
         toastr.success('{{ session('message') }}', 'Thông báo', {timeOut: 5000});
     </script>
 @endif
+@if (isset($user) && count($user->customer)==0)
+    <script>
+        $('#address').modal('show')
+    </script>
+@endif

@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     //
-    protected $table = 'customer';
+    protected $table = 'customers';
 
-    protected $fillable = ['idUser', 'address', 'phone'];
+    protected $fillable = ['idUser', 'email', 'address','phone', 'active'];
 
     //    dia chi cua user nao
     public function User()

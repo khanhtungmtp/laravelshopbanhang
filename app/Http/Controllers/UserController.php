@@ -103,8 +103,12 @@ class UserController extends Controller
         $data = $request->all();
         $data['password'] = Hash::make($request->password);
         $user = User::create($data);
-        Auth::login($user);
-        return back()->with('message', 'Đăng ký tài khoản thành công');
+        if (!$error){
+            Auth::login($user);
+//            return back()->with('message', 'Đăng ký tài khoản thành công');
+        } else {
+            return response()->json(['error' => 'Đăng ký tài khoản thất bại, vui lòng kiểm tra lại'], 200);
+        }
     }
 
     /**

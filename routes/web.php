@@ -28,3 +28,6 @@ Route::post('register','UserController@register')->name('register');
 // Cart
 Route::resource('cart','CartController');
 Route::get('add-cart/{id}','CartController@addCart')->name('addCart');
+// checkout
+Route::get('checkout','CartController@checkout')->name('cart.checkout');
+Route::resource('customer','CustomerController');

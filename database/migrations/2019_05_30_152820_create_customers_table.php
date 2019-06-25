@@ -19,6 +19,7 @@ class CreateCustomersTable extends Migration
             $table->string('address');
             $table->string('email');
             $table->string('phone');
+            $table->integer('active')->default(0);
             $table->timestamps();
         });
     }
