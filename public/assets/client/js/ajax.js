@@ -106,8 +106,9 @@ $(document).ready(function () {
         let paytotal = $('.paytotal').text();
         paytotal = paytotal.replace(' VNĐ', '');
         let radioAddress = $('input[name=rdoaddress]');
+        
         $.each(radioAddress, function (key, value) {
-            if (value.checked === true) {
+            if (value.checked == true) {
                 email = value.value;
                 name = $('.name' + key).text();
                 address = $('.address' + key).text();

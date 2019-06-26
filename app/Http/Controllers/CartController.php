@@ -10,6 +10,8 @@ use App\Models\Product;
 use App\Models\ProductTypes;
 use Auth;
 use Cart;
+use Mail;
+use App\Mail\ShoppingMail;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -86,18 +88,20 @@ class CartController extends Controller
         $data['idUser']     = Auth::user()->id;
         $data['money']      = str_replace(',', '', $request->money);
         $order              = Order::create($data);
-
         // luu chi tiet hoa don
         $idOrder     = $order->id;
         $orderDetail = [];
-        foreach (Cart::content() as $cart)
+        $orderDetails = [];
+        foreach (Cart::content() as $key => $cart)
         {
             $orderDetail['idProduct'] = $cart->id;
             $orderDetail['idOrder']   = $idOrder;
             $orderDetail['quantity']  = $cart->qty;
             $orderDetail['price']     = $cart->price;
-            OrderDetail::create($orderDetail);
+            $orderDetails[$key]       = OrderDetail::create($orderDetail);
         }
+        dd($order->email);die;
+        Mail::to($order->email)->send(new ShoppingMail($order, $orderDetails));
         Cart::destroy();
         return response()->json('Đặt hàng thành công! Cám ơn quý khách', 200);
     }

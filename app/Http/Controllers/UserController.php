@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Socialite;
+use Validator;
 
 class UserController extends Controller
 {
@@ -114,11 +115,28 @@ class UserController extends Controller
      */
     public function loginClient(Request $request)
     {
-        $data = $request->only('email','password');
-        if(Auth::attempt($data,$request->has('remember'))){
-            return back()->with('message','Đăng nhập thành công');
-        }else{
-            return back()->with('error','Đăng nhập thất bại. Xin vui lòng kiểm tra lại tài khoản');
+        $rules = [
+            'email' =>'required|email',
+            'password' => 'required|min:6'
+        ];
+        $messages = [
+            'email.required' => 'Email là trường bắt buộc',
+            'email.email' => 'Email không đúng định dạng',
+            'password.required' => 'Mật khẩu là trường bắt buộc',
+            'password.min' => 'Mật khẩu phải chứa ít nhất 6 ký tự',
+        ];
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        } else {
+            $data = $request->only('email','password');
+            dd($data);die;
+            if(Auth::attempt($data,$request->has('remember'))){
+                return back()->with('message','Đăng nhập thành công');
+            }else{
+                return back()->with('error','Đăng nhập thất bại. Xin vui lòng kiểm tra lại tài khoản');
+            }
         }
     }
 

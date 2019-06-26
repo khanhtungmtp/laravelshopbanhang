@@ -38,7 +38,7 @@
                                             <ul style="list-style: none;">
                                                 @foreach ($user->customer as $key => $customer)
                                                     <li>
-                                                        <input type="radio" class="rdoAddress" name="rdoaddress" @if ($customer->active ==1)
+                                                        <input type="radio" class="rdoAddress" value="{{$customer->email}}" name="rdoaddress" @if ($customer->active ==1)
                                                             checked
                                                         @endif style="float: left;">
                                                         <span style="float: left;">
