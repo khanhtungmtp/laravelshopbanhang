@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Auth;
 use Illuminate\Support\Facades\Hash;
 use Socialite;
 use Validator;
@@ -82,60 +82,109 @@ class UserController extends Controller
         //
         $this->validate($request,
             [
-                'name'=>'required|min:2|max:255',
-                'email'=>'required|email|unique:users,email',
-                'password'=>'required|min:6|max:255',
-                're_password'=>'required|same:password',
+                'name'        => 'required|min:2|max:255',
+                'email'       => 'required|email|unique:users,email',
+                'password'    => 'required|min:6|max:255',
+                're_password' => 'required|same:password',
             ],
             [
-                'name.required'=>'họ và tên không được bỏ trống',
-                'name.min'=>'độ dài tối thiếu từ 2 đến 255 ký tự',
-                'name.max'=>'độ dài tối đa 255 ký tự',
-                'email.required'=>'email không được bỏ trống',
-                'email.email'=>'nhập không đúng định dạng email',
-                'email.unique'=>'email đã tồn tại trong hệ thống',
-                'password.required'=>'mật khẩu không được bỏ trống',
-                'password.min'=>'mật khẩu phải có ít nhất 6 ký tự',
-                'password.max'=>'mật khẩu tối đa có 255 ký tự',
-                're_password.required'=>'xác nhận mật khẩu không được bỏ trống',
-                're_password.same'=>'không khớp với mật khẩu đã nhập',
+                'name.required'        => 'họ và tên không được bỏ trống',
+                'name.min'             => 'độ dài tối thiếu từ 2 đến 255 ký tự',
+                'name.max'             => 'độ dài tối đa 255 ký tự',
+                'email.required'       => 'email không được bỏ trống',
+                'email.email'          => 'nhập không đúng định dạng email',
+                'email.unique'         => 'email đã tồn tại trong hệ thống',
+                'password.required'    => 'mật khẩu không được bỏ trống',
+                'password.min'         => 'mật khẩu phải có ít nhất 6 ký tự',
+                'password.max'         => 'mật khẩu tối đa có 255 ký tự',
+                're_password.required' => 'xác nhận mật khẩu không được bỏ trống',
+                're_password.same'     => 'không khớp với mật khẩu đã nhập',
             ]
         );
-        $data = $request->all();
+        $data             = $request->all();
         $data['password'] = Hash::make($request->password);
-        $user = User::create($data);
+        $user             = User::create($data);
         Auth::login($user);
         return back()->with('message', 'Đăng ký tài khoản thành công');
     }
 
     /**
-     * Display a listing of the resource.
+     * login Client
      *
      * @return \Illuminate\Http\Response
      */
     public function loginClient(Request $request)
     {
-        $rules = [
-            'email' =>'required|email',
+        $rules     = [
+            'email'    => 'required|email',
             'password' => 'required|min:6'
         ];
-        $messages = [
-            'email.required' => 'Email là trường bắt buộc',
-            'email.email' => 'Email không đúng định dạng',
+        $messages  = [
+            'email.required'    => 'Email là trường bắt buộc',
+            'email.email'       => 'Email không đúng định dạng',
             'password.required' => 'Mật khẩu là trường bắt buộc',
-            'password.min' => 'Mật khẩu phải chứa ít nhất 6 ký tự',
+            'password.min'      => 'Mật khẩu phải chứa ít nhất 6 ký tự',
         ];
         $validator = Validator::make($request->all(), $rules, $messages);
 
-        if ($validator->fails()) {
+        if ($validator->fails())
+        {
             return redirect()->back()->withErrors($validator)->withInput();
-        } else {
-            $data = $request->only('email','password');
-            dd($data);die;
-            if(Auth::attempt($data,$request->has('remember'))){
-                return back()->with('message','Đăng nhập thành công');
-            }else{
-                return back()->with('error','Đăng nhập thất bại. Xin vui lòng kiểm tra lại tài khoản');
+        } else
+        {
+            $data = $request->only('email', 'password');
+            dd($data);
+            die;
+            if (Auth::attempt($data, $request->has('remember')))
+            {
+                return back()->with('message', 'Đăng nhập thành công');
+            } else
+            {
+                return back()->with('error', 'Đăng nhập thất bại. Xin vui lòng kiểm tra lại tài khoản');
+            }
+        }
+    }
+
+    /**
+     * login admin
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function loginAdmin(Request $request)
+    {
+        $rules     = [
+            'email'    => 'required|email',
+            'password' => 'required|min:6'
+        ];
+        $messages  = [
+            'email.required'    => 'Email là trường bắt buộc',
+            'email.email'       => 'Email không đúng định dạng',
+            'password.required' => 'Mật khẩu là trường bắt buộc',
+            'password.min'      => 'Mật khẩu phải chứa ít nhất 6 ký tự',
+        ];
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails())
+        {
+            return redirect()->back()->with('error','Sai tài khoản hoặc mật khẩu');
+        } else
+        {
+            $data = $request->only('email', 'password');
+            if (Auth::attempt($data, $request->has('remember')))
+            {
+                if (Auth::user()->role == 1)
+                {
+                    return redirect('/admin')->with('message', 'Đăng nhập thành công');
+                } elseif (Auth::user()->role == 2){
+                    return redirect()->route('product.index')->with('message','Đăng nhập thành công');
+                } elseif (Auth::user()->role == 3){
+                    return redirect()->route('order.index')->with('message','Đăng nhập thành công');
+                } else {
+                    return redirect()->route('admin.getLogin')->with('error','Truy cập bị từ chối, bạn không có quyền vào trang này');
+                }
+            } else
+            {
+                return back()->with('error', 'Đăng nhập thất bại. Xin vui lòng kiểm tra lại tài khoản');
             }
         }
     }

@@ -51,7 +51,6 @@
 <script src="assets/admin/js/toastr.min.js"></script>
 @yield('ckeditor')
 
-
 @if(session('message'))
     <script type="text/javascript">
         toastr.success('{{ session('message') }}', 'Thông báo', {timeOut: 5000});

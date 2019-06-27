@@ -12,10 +12,12 @@
 */
 
 Route::get('/', 'HomeController@index');
-
+Route::view('/admin/login', 'admin.pages.login')->name('admin.getLogin');
+Route::post('/admin/login', 'UserController@loginAdmin')->name('admin.postLogin');
 Route::get('getProductType', 'AjaxController@getProductType');
-Route::group(['prefix' => 'admin'], function ()
+Route::group(['prefix' => 'admin','middleware' => 'adminMiddleware'], function ()
 {
+    Route::view('/','admin.pages.index');
     Route::resource('category', 'CategoryController');
     Route::resource('product-type', 'ProductTypeController');
     Route::resource('product', 'ProductController');

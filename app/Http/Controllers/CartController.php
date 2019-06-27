@@ -100,7 +100,6 @@ class CartController extends Controller
             $orderDetail['price']     = $cart->price;
             $orderDetails[$key]       = OrderDetail::create($orderDetail);
         }
-        dd($order->email);die;
         Mail::to($order->email)->send(new ShoppingMail($order, $orderDetails));
         Cart::destroy();
         return response()->json('Đặt hàng thành công! Cám ơn quý khách', 200);
