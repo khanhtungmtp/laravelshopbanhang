@@ -166,7 +166,7 @@ class UserController extends Controller
 
         if ($validator->fails())
         {
-            return redirect()->back()->with('error','Sai tài khoản hoặc mật khẩu');
+            return redirect()->back()->with('error','Email hoặc mật khẩu không chính xác');
         } else
         {
             $data = $request->only('email', 'password');
@@ -176,7 +176,7 @@ class UserController extends Controller
                 {
                     return redirect('/admin')->with('message', 'Đăng nhập thành công');
                 } elseif (Auth::user()->role == 2){
-                    return redirect()->route('product.index')->with('message','Đăng nhập thành công');
+                    return redirect()->route('category.index')->with('message','Đăng nhập thành công');
                 } elseif (Auth::user()->role == 3){
                     return redirect()->route('order.index')->with('message','Đăng nhập thành công');
                 } else {

@@ -6,6 +6,7 @@ use App\Models\Categories;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCategoryRequest;
 use Validator;
+use Auth;
 
 class CategoryController extends Controller
 {
@@ -17,8 +18,11 @@ class CategoryController extends Controller
     public function index()
     {
         //
-        $category = Categories::paginate(5);
-        return view('admin.pages.category.list', compact('category'));
+        $user = Auth::user();
+        if ($user->can('view',Categories::class)){
+            $category = Categories::paginate(5);
+            return view('admin.pages.category.list', compact('category'));
+        }
     }
 
     /**
@@ -29,7 +33,10 @@ class CategoryController extends Controller
     public function create()
     {
         //
-        return view('admin.pages.category.add');
+        $user = Auth::user();
+        if ($user->can('create',Categories::class)) {
+            return view('admin.pages.category.add');
+        }
     }
 
     /**
@@ -41,12 +48,16 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         //
-        Categories::create([
-            'name'   => $request->name,
-            'slug'   => str_slug($request->name),
-            'status' => $request->status,
-        ]);
-        return redirect(route('category.index'))->with('message','Thêm mới danh mục thành công');
+        $user = Auth::user();
+        if ($user->can('store',Categories::class))
+        {
+            Categories::create([
+                'name'   => $request->name,
+                'slug'   => str_slug($request->name),
+                'status' => $request->status,
+            ]);
+            return redirect(route('category.index'))->with('message','Thêm mới danh mục thành công');
+        }
     }
 
     /**
@@ -69,8 +80,12 @@ class CategoryController extends Controller
     public function edit($id)
     {
         //
-        $category = Categories::find($id);
-        return response()->json($category, 200);
+        $user = Auth::user();
+        if ($user->can('update',Categories::class))
+        {
+            $category = Categories::find($id);
+            return response()->json($category, 200);
+        }
     }
 
     /**
@@ -82,29 +97,33 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // validate
-        $validator = Validator::make($request->all(),
-            [
-                'name' => 'required|min:2|max:255|unique:categories,name,' . $id
-            ],
-            [
-                'name.unique'   => ':attributes đã tồn tại',
-                'name.required' => 'Tên danh mục không được bỏ trống',
-                'name.min'      => 'Tên danh mục phải từ 2-255 ký tự',
-                'name.max'      => 'Tên danh mục phải từ 2-255 ký tự'
-            ]);
-        if ($validator->fails())
+        $user = Auth::user();
+        if ($user->can('update',Categories::class))
         {
-            return response()->json(['error' => 'true', 'message' => $validator->errors()], 200);
+            // validate
+            $validator = Validator::make($request->all(),
+                [
+                    'name' => 'required|min:2|max:255|unique:categories,name,' . $id
+                ],
+                [
+                    'name.unique'   => ':attributes đã tồn tại',
+                    'name.required' => 'Tên danh mục không được bỏ trống',
+                    'name.min'      => 'Tên danh mục phải từ 2-255 ký tự',
+                    'name.max'      => 'Tên danh mục phải từ 2-255 ký tự'
+                ]);
+            if ($validator->fails())
+            {
+                return response()->json(['error' => 'true', 'message' => $validator->errors()], 200);
+            }
+            $category = Categories::find($id);
+            // update
+            $category->update([
+                'name'   => $request->name,
+                'slug'   => str_slug($request->name),
+                'status' => $request->status,
+            ]);
+            return response()->json(['message' => 'Cập nhập danh mục thành công']);
         }
-        $category = Categories::find($id);
-        // update
-        $category->update([
-            'name'   => $request->name,
-            'slug'   => str_slug($request->name),
-            'status' => $request->status,
-        ]);
-        return response()->json(['message' => 'Cập nhập danh mục thành công']);
     }
 
     /**
