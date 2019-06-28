@@ -21,6 +21,7 @@ Route::group(['prefix' => 'admin','middleware' => 'adminMiddleware'], function (
     Route::resource('category', 'CategoryController');
     Route::resource('product-type', 'ProductTypeController');
     Route::resource('product', 'ProductController');
+    Route::post('update-product/{id}','ProductController@update');
 });
 // Đăng nhập facebook
 Route::get('callback/{social}','UserController@handleProviderCallback');

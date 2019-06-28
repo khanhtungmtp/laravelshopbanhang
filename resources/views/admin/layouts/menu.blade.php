@@ -10,7 +10,7 @@
 
     <!-- Divider -->
 
-    @if (Auth::user()->role ==1 | Auth::user()->role==2)
+    @if (Auth::user()->role == 1 | Auth::user()->role == 2)
         <hr class="sidebar-divider my-0">
 
         <!-- Nav Item - Dashboard -->
@@ -47,7 +47,7 @@
     @endif
 
     {{-- Product_type   --}}
-    @if (Auth::user()->role ==1 | Auth::user()->role==3)
+    @if (Auth::user()->role == 1 | Auth::user()->role == 3)
     <!-- Divider -->
         <hr class="sidebar-divider">
 

@@ -8,7 +8,6 @@ use App\Models\Product;
 use App\Models\ProductTypes;
 use Illuminate\Support\Facades\File;
 use Validator;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -80,15 +79,12 @@ class ProductController extends Controller
         {
             return back()->with(['error' => 'Bạn chưa chọn hình sản phẩm']);
         }
-        if (empty($errors))
-        {
-            $data          = $request->all();
-            $data['image'] = $file_name;
-            $data['slug']  = str_slug($file_name);
+        $data          = $request->all();
+        $data['image'] = $file_name;
+        $data['slug']  = str_slug($file_name);
 
-            Product::create($data);
-            return redirect()->route('product.index')->with('message', 'Thêm mới sản phẩm thành công');
-        }
+        Product::create($data);
+        return redirect()->route('product.index')->with('message', 'Thêm mới sản phẩm thành công');
     }
 
     /**
@@ -125,40 +121,11 @@ class ProductController extends Controller
      * @param                          $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreProductRequest $request, $id)
     {
+        $product   = Product::find($id);
         $data      = $request->all();
         $data['slug'] = str_slug($request->name);
-        $product   = Product::find($id);
-        $validator = Validator::make($request->all(),
-            [
-                'name'        => 'required|string|min:2|max:50|unique:products',
-                'image'       => 'required|image|mimes:jpeg,jpg,png,gif',
-                'price'       => 'required|numeric',
-                'quantity'    => 'required|numeric',
-                'promotional' => 'required|numeric'
-            ],
-            [
-                'required' => ':attribute là trường bắt buộc ',
-                'string'   => ':attribute phải là dạng chuỗi',
-                'image'    => ':attribute chỉ hỗ trợ các đuôi png, jpeg, gif, jpg',
-                'min'      => ':attribute phải từ 2-50 ký tự',
-                'max'      => ':attribute phải từ 2-50 ký tự',
-                'unique'   => ':attribute đã tồn tại',
-                'mimes'    => ':attribute có đuôi không được hỗ trợ',
-                'numeric'  => ':attribute phải là số',
-            ],
-            [
-                'name'        => 'Tên sản phẩm',
-                'image'       => 'Hình ảnh',
-                'price'       => 'Giá',
-                'quantity'    => 'Số lượng',
-                'promotional' => 'Giá khuyến mãi'
-            ]);
-        if ($validator->fails())
-        {
-            return response()->json(['error' => true, 'message' => $validator->errors()], 200);
-        }
         // kiểm tra có upload hình
         if ($request->hasFile('image'))
         {

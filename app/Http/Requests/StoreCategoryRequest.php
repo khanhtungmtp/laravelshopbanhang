@@ -18,13 +18,13 @@ class StoreCategoryRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
+     * ignore id, bỏ kiểm tra trùng với id hiện tại
      * @return array
      */
     public function rules()
     {
         return [
-            'name' => 'required|min:2|max:255|unique:categories'
+            'name' => 'required|min:2|max:255|unique:categories,name,'.($this->id ?? '')
         ];
     }
 

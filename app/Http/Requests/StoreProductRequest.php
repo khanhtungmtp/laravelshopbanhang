@@ -18,14 +18,15 @@ class StoreProductRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
+     * ignore id, ko kiểm tra trùng với id hiện tại
+     * ignore image, ko kiểm tra bắt buộc up hình với id hiện tại
      * @return array
      */
     public function rules()
     {
         return [
-            'name'        => 'required|string|min:2|max:50|unique:products',
-            'image'       => 'required|image|mimes:jpeg,jpg,png,gif',
+            'name'        => 'required|string|min:2|max:50|unique:products,name,'.($this->id ?? ''),
+            'image'       => ($this->id ? 'nullable' : 'required').'|image|mimes:jpeg,jpg,png,gif',
             'price'       => 'required|numeric',
             'quantity'    => 'required|numeric',
             'promotional' => 'required|numeric'

@@ -14,12 +14,12 @@ $(document).ready(function () {
             url: 'admin/category/' + id + '/edit',
             dataType: 'json',
             type: 'get',
-            success: function ($result) {
-                // console.log($result) trả về 1 object sản phẩm trong db
+            success: function (result) {
+                 // console.log(result)
                 //    đổ giá trị ra input modal
-                $('.name').val($result.name);
-                $('.title').text($result.name);
-                if ($result.status === 1) {
+                $('.name').val(result.name);
+                $('.title').text(result.name);
+                if (result.status === 1) {
                     // thêm attribute selected vào
                     $('.show').attr('selected', 'selected');
                 } else {
@@ -36,21 +36,22 @@ $(document).ready(function () {
                 type: 'put',
                 dataType: 'json',
                 data: {
+                    id: id,
                     name: name,
                     status: status
                 },
-                success: function ($result) {
+                success: function (result) {
                     // console.log($result)
-                    if ($result.error === 'true') {
-                        let errorSelector = $('.error');
-                        errorSelector.show();
-                        errorSelector.text($result.message.name[0]);
-                    } else {
-                        // $result.success là response()->json(['success' bên controller
-                        toastr.success($result.success, 'Thông báo', {timeOut: 5000});
-                        $('#edit').modal('hide');
-                        location.reload();
-                    }
+                    // $result.success là response()->json(['success' bên controller
+                    toastr.success(result.success, 'Thông báo', {timeOut: 5000});
+                    $('#edit').modal('hide');
+                    location.reload();
+                },
+                error: function (error) {
+                    // console.log(error)
+                    let errors = JSON.parse(error.responseText);
+                    $('.error').show();
+                    $('.error').text(errors.errors.name)
                 }
             });
         });
@@ -205,11 +206,12 @@ $(document).ready(function () {
                 }
             });
         })
-    })
+    });
 
     // edit product
     $('.editProduct').click(function () {
-        let id = $(this).data('id')
+        let id = $(this).data('id');
+        $('.idProduct').val(id);
         $('.errorName').hide();
         $('.errorQuantity').hide();
         $('.errorPrice').hide();
@@ -222,95 +224,91 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (data) {
                 // console.log(data)
-                $('.name').val(data.product.name)
-                $('.quantity').val(data.product.quantity)
-                $('.price').val(data.product.price)
-                $('.promotional').val(data.product.promotional)
-                $('.imageThum').attr('src', 'img/upload/product/' + data.product.image)
+                $('.name').val(data.product.name);
+                $('.quantity').val(data.product.quantity);
+                $('.price').val(data.product.price);
+                $('.promotional').val(data.product.promotional);
+                $('.imageThum').attr('src', 'img/upload/product/' + data.product.image);
                 if (data.product.status === 1) {
                     $('.show-item').attr('selected', 'selected')
                 } else {
                     $('.hidden-item').attr('selected', 'selected')
                 }
                 CKEDITOR.instances['description'].setData(data.product.description);
-                let categoryHTML = ''
+                let categoryHTML = '';
                 $.each(data.category, function (key, value) {
                     if (data.category === value['id']){
-                        categoryHTML += '<option value="' + value['id'] + '" selected>'
-                        categoryHTML += value['name']
+                        categoryHTML += '<option value="' + value['id'] + '" selected>';
+                        categoryHTML += value['name'];
                         categoryHTML += '</option>'
                     } else {
-                        categoryHTML += '<option value="' + value['id'] + '">'
-                        categoryHTML += value['name']
+                        categoryHTML += '<option value="' + value['id'] + '">';
+                        categoryHTML += value['name'];
                         categoryHTML += '</option>'
                     }
-                })
+                });
 
-                let productTypeHTML = ''
+                let productTypeHTML = '';
                 $.each(data.product_type, function (key, value) {
                     if (data.product_type === value['id']){
-                        productTypeHTML += '<option value="' + value['id'] + '" selected>'
-                        productTypeHTML += value['name']
+                        productTypeHTML += '<option value="' + value['id'] + '" selected>';
+                        productTypeHTML += value['name'];
                         productTypeHTML += '</option>'
                     } else {
-                        productTypeHTML += '<option value="' + value['id'] + '">'
-                        productTypeHTML += value['name']
+                        productTypeHTML += '<option value="' + value['id'] + '">';
+                        productTypeHTML += value['name'];
                         productTypeHTML += '</option>'
                     }
-                })
-                $('.cateProduct').html(categoryHTML)
+                });
+                $('.cateProduct').html(categoryHTML);
                 $('.proType').html(productTypeHTML)
             }
-        })
+        });
         // update product
         $('#updateProduct').on('submit',function (e) {
             // ngăn submit form
-            e.preventDefault()
+            e.preventDefault();
             $.ajax({
-                url: ' admin/product/' + id,
+                url: ' admin/update-product/' + id,
                 data : new FormData(this),
                 contentType : false,
                 processData : false,
                 cache : false,
-                type : 'put',
+                type : 'post',
                 success: function (data) {
-                    console.log(data)
-                    if (data.error == true){
-                        if(data.message.image){
+                     // console.log(data);
+                    toastr.success(data.result, 'Thông báo', {timeOut: 5000});
+                    $('#editProduct').modal('hide');
+                    location.reload();
+                },
+                error: function (error) {
+                    let errors = JSON.parse(error.responseText);
+                    // console.log(errors)
+                        if(errors.errors.image){
                             $('.errorImage').show();
-                            $('.errorImage').text(data.message.image[0]);
-                            $('.image').val('');
+                            $('.errorImage').text(errors.errors.image);
                         }
-                        if(data.message.name){
+                        if(errors.errors.name){
                             $('.errorName').show();
-                            $('.errorName').text(data.message.name[0]);
-                            $('.name').val('');
+                            $('.errorName').text(errors.errors.name);
                         }
-                        if(data.message.quantity){
+                        if(errors.errors.quantity){
                             $('.errorQuantity').show();
-                            $('.errorQuantity').text(data.message.quantity[0]);
-                            $('.quantity').val('');
+                            $('.errorQuantity').text(errors.errors.quantity);
                         }
-                        if(data.message.price){
+                        if(errors.errors.price){
                             $('.errorPrice').show();
-                            $('.errorPrice').text(data.message.price[0]);
-                            $('.price').val('');
+                            $('.errorPrice').text(errors.errors.price);
                         }
-                        if(data.message.promotional){
+                        if(errors.errors.promotional){
                             $('.errorPromotional').show();
-                            $('.errorPromotional').text(data.message.promotional[0]);
-                            $('.promotional').val('');
+                            $('.errorPromotional').text(errors.errors.promotional);
                         }
-                        if(data.message.description){
+                        if(errors.errors.description){
                             $('.errorDescription').show();
-                            $('.errorDescription').text(data.message.description[0]);
-                            $('.description').val('');
+                            $('.errorDescription').text(errors.errors.description);
                         }
-                    } else {
-                        toastr.success(data.result, 'Thông báo', {timeOut: 5000});
-                        $('#editProduct').modal('hide');
-                        location.reload();
-                    }
+
                 }
             })
         })

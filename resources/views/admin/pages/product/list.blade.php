@@ -92,6 +92,7 @@
                     <div class="row" style="margin: 5px">
                         <div class="col-lg-12">
                             <form role="form" id="updateProduct" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="id" class="idProduct">
                                 <fieldset class="form-group">
                                     <label>Tên sản phẩm</label>
                                     <input class="form-control name" name="name" placeholder="Nhập tên sản phẩm">

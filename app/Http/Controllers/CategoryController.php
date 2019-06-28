@@ -95,26 +95,11 @@ class CategoryController extends Controller
      * @param                          $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreCategoryRequest $request, $id)
     {
         $user = Auth::user();
         if ($user->can('update',Categories::class))
         {
-            // validate
-            $validator = Validator::make($request->all(),
-                [
-                    'name' => 'required|min:2|max:255|unique:categories,name,' . $id
-                ],
-                [
-                    'name.unique'   => ':attributes đã tồn tại',
-                    'name.required' => 'Tên danh mục không được bỏ trống',
-                    'name.min'      => 'Tên danh mục phải từ 2-255 ký tự',
-                    'name.max'      => 'Tên danh mục phải từ 2-255 ký tự'
-                ]);
-            if ($validator->fails())
-            {
-                return response()->json(['error' => 'true', 'message' => $validator->errors()], 200);
-            }
             $category = Categories::find($id);
             // update
             $category->update([
