@@ -223,7 +223,7 @@ $(document).ready(function () {
             type: 'get',
             dataType: 'json',
             success: function (data) {
-                // console.log(data)
+                 console.log(data)
                 $('.name').val(data.product.name);
                 $('.quantity').val(data.product.quantity);
                 $('.price').val(data.product.price);
@@ -237,7 +237,7 @@ $(document).ready(function () {
                 CKEDITOR.instances['description'].setData(data.product.description);
                 let categoryHTML = '';
                 $.each(data.category, function (key, value) {
-                    if (data.category === value['id']){
+                    if (data.product.idCategory === value['id']){
                         categoryHTML += '<option value="' + value['id'] + '" selected>';
                         categoryHTML += value['name'];
                         categoryHTML += '</option>'
@@ -250,7 +250,7 @@ $(document).ready(function () {
 
                 let productTypeHTML = '';
                 $.each(data.product_type, function (key, value) {
-                    if (data.product_type === value['id']){
+                    if (data.product.idProductType === value['id']){
                         productTypeHTML += '<option value="' + value['id'] + '" selected>';
                         productTypeHTML += value['name'];
                         productTypeHTML += '</option>'

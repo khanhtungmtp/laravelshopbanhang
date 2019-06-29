@@ -13,7 +13,7 @@
                     @csrf
                     <fieldset class="form-group">
                         <label>Tên sản phẩm</label>
-                        <input class="form-control" name="name" placeholder="Nhập tên sản phẩm">
+                        <input class="form-control" name="name" placeholder="Nhập tên sản phẩm" value="{{ old('name') }}">
                         @if($errors->has('name'))
                             <div class="alert alert-danger">{{ $errors->first('name') }}</div>
                         @endif
@@ -27,14 +27,14 @@
                     </div>
                     <div class="form-group">
                         <label for="price">Đơn giá</label>
-                        <input type="text" name="price" placeholder="Nhập đơn giá" class="form-control">
+                        <input type="text" name="price" placeholder="Nhập đơn giá" class="form-control" value="{{ old('price') }}">
                         @if($errors->has('price'))
                             <div class="alert alert-danger">{{ $errors->first('price') }}</div>
                         @endif
                     </div>
                     <div class="form-group">
                         <label for="price">Giá khuyến mại</label>
-                        <input type="text" name="promotional" placeholder="Nhập giá khuyến mại nếu có" class="form-control">
+                        <input type="text" name="promotional" placeholder="Nhập giá khuyến mại nếu có" class="form-control" value="{{ old('promotional') }}">
                         @if($errors->has('promotional'))
                             <div class="alert alert-danger">{{ $errors->first('promotional') }}</div>
                         @endif
@@ -48,7 +48,7 @@
                     </div>
                     <div class="form-group">
                         <label>Mô tả sản phẩm</label>
-                        <textarea name="description" id="description" cols="5" rows="5" class="form-control"></textarea>
+                        <textarea name="description" id="description" cols="5" rows="5" class="form-control">{{ old('description') }}</textarea>
                         @if($errors->has('description'))
                             <div class="alert alert-danger">{{ $errors->first('description') }}</div>
                         @endif

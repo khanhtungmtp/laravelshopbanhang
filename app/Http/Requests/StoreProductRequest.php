@@ -28,8 +28,7 @@ class StoreProductRequest extends FormRequest
             'name'        => 'required|string|min:2|max:50|unique:products,name,'.($this->id ?? ''),
             'image'       => ($this->id ? 'nullable' : 'required').'|image|mimes:jpeg,jpg,png,gif',
             'price'       => 'required|numeric',
-            'quantity'    => 'required|numeric',
-            'promotional' => 'required|numeric'
+            'quantity'    => 'required|numeric'
         ];
     }
 
@@ -54,7 +53,6 @@ class StoreProductRequest extends FormRequest
             'image'       => 'Hình ảnh',
             'price'       => 'Giá',
             'quantity'    => 'Số lượng',
-            'promotional' => 'Giá khuyến mãi'
         ];
     }
 }

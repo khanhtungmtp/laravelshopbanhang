@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\ImageService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +14,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // đăng ký sử dụng class ImageService
+        $this->app->bind('App\Services\ImageService', function ($app){
+            return new ImageService();
+        });
     }
 
     /**

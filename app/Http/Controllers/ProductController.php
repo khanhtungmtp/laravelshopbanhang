@@ -6,11 +6,18 @@ use App\Http\Requests\StoreProductRequest;
 use App\Models\Categories;
 use App\Models\Product;
 use App\Models\ProductTypes;
-use Illuminate\Support\Facades\File;
+use App\Services\ImageService;
+use File;
 use Validator;
 
 class ProductController extends Controller
 {
+    protected $image_service;
+    public function __construct(ImageService $imageService)
+    {
+        $this->image_service = $imageService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -45,44 +52,25 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $data = [];
         // kiểm tra có upload hình
         if ($request->hasFile('image'))
         {
             $file      = $request->file('image');
-            $file_name = $file->getClientOriginalName();
-            $file_type = strtolower($file->getMimeType());
-            $file_size = $file->getSize();
-            $img_type  = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
-            // chỉ chấp nhận file hình có đuôi như trên
-            if (in_array($file_type, $img_type))
-            {
-                if ($file_size < 1048576)
-                {
-                    $file_name = date('DD-mm-yyyy') . '-' . rand() . '-' . $file_name;
-                    if (empty($errors))
-                    {
-                        if (!$file->move('img/upload/product/', $file_name))
-                        {
-                            return back()->with(['error' => 'Có lỗi khi upload ảnh']);
-                        }
-                    }
-                } else
-                {
-                    return back()->with(['error' => 'Bạn không upload hình quá 1MB']);
-                }
-            } else
-            {
-                return back()->with(['error' => 'File không phải là hình, hoặc có đuôi file không hỗ trợ']);
+            if ($this->image_service->checkFile($file) == 1) {
+                $filename = $this->image_service->moveImage('img/upload/product/',$file);
+
+            } elseif ($this->image_service->checkFile($file) == 0){
+                return back()->with(['error' => 'Bạn không được upload hình quá 1MB']);
+            } else {
+                return back()->with(['error' => 'File bạn vừa upload không phải là hình, hoặc có đuôi file không hỗ trợ']);
             }
         } else
         {
             return back()->with(['error' => 'Bạn chưa chọn hình sản phẩm']);
         }
         $data          = $request->all();
-        $data['image'] = $file_name;
-        $data['slug']  = str_slug($file_name);
-
+        $data['image'] = $filename;
+        $data['slug']  = utf8tourl($filename);
         Product::create($data);
         return redirect()->route('product.index')->with('message', 'Thêm mới sản phẩm thành công');
     }
@@ -125,43 +113,18 @@ class ProductController extends Controller
     {
         $product   = Product::find($id);
         $data      = $request->all();
-        $data['slug'] = str_slug($request->name);
+        $data['slug'] = utf8tourl($request->name);
         // kiểm tra có upload hình
         if ($request->hasFile('image'))
         {
             $file      = $request->file('image');
-            $file_name = $file->getClientOriginalName();
-            $file_type = strtolower($file->getMimeType());
-            $file_size = $file->getSize();
-            $img_type  = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
-            // chỉ chấp nhận file hình có đuôi như trên
-            if (in_array($file_type, $img_type))
-            {
-                if ($file_size < 1048576)
-                {
-                    $file_name = date('DD-mm-yyyy') . '-' . rand() . '-' . $file_name;
-                    if (empty($errors))
-                    {
-                        if ($file->move('img/upload/product/', $file_name))
-                        {
-                            $data['image'] = $file_name;
-                            if (File::exists('img/upload/product/', $product->image))
-                            {
-                                // xóa file
-                                unlink('img/upload/product/', $product->image);
-                            }
-                        } else
-                        {
-                            return back()->with(['error' => 'Có lỗi khi upload ảnh']);
-                        }
-                    }
-                } else
-                {
-                    return back()->with(['error' => 'Bạn không upload hình quá 1MB']);
-                }
-            } else
-            {
-                return back()->with(['error' => 'File không phải là hình, hoặc có đuôi file không hỗ trợ']);
+            if ($this->image_service->checkFile($file) == 1) {
+                $filename = $this->image_service->moveImage('img/upload/product/',$file);
+
+            } elseif ($this->image_service->checkFile($file) == 0){
+                return back()->with(['error' => 'Bạn không được upload hình quá 1MB']);
+            } else {
+                return back()->with(['error' => 'File bạn vừa upload không phải là hình, hoặc có đuôi file không hỗ trợ']);
             }
         } else
         {
